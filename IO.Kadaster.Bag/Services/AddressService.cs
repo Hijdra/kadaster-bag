@@ -26,7 +26,7 @@ public class AddressService : IAddressService
     public async Task<Response<AdresIOHalCollection>> FindAsync(string postCode, string houseNumber, string houseNumberAddition = "", string houseLetter = "", bool? exactMatch = null)
     {
         if (string.IsNullOrEmpty(postCode)) throw new ArgumentNullException(nameof(postCode), $"{nameof(postCode)} is required");
-        if (string.IsNullOrEmpty(postCode)) throw new ArgumentNullException(nameof(houseNumber), $"{nameof(houseNumber)} is required");
+        if (string.IsNullOrEmpty(houseNumber)) throw new ArgumentNullException(nameof(houseNumber), $"{nameof(houseNumber)} is required");
 
         var query = new Dictionary<string, string>
         {
