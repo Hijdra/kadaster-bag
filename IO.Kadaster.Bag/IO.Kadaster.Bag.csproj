@@ -5,6 +5,14 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>Kadaster.Bag</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>Kadaster Bag client</Title>
+        <Authors>Mark Hijdra</Authors>
+        <PackageProjectUrl>https://github.com/Hijdra/kadaster-bag</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/Hijdra/kadaster-bag/blob/main/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/Hijdra/kadaster-bag</RepositoryUrl>
+        <PackageTags>Kadaster,Bag</PackageTags>
+        <PackageVersion>0.1.0</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>
