@@ -21,12 +21,18 @@ public class AddressService : IAddressService
     /// Find multiple addresses based on postalCode, houseNumber and optional params
     /// </summary>
     /// <see href="https://lvbag.github.io/BAG-API/Technische%20specificatie/#/Adres/bevraagAdressen">Query Addresses</see>
-    /// <param name="queryParams">Query params based on Swagger doc</param>
+    /// <param name="postCode">Postal Code</param>
+    /// <param name="houseNumber">House Number</param>
+    /// <param name="houseNumberAddition">House Number Addition</param>
+    /// <param name="houseLetter">House Letter</param>
+    /// <param name="exactMatch">Exact Match</param>
     /// <returns>Response of AdresIOHalCollection</returns>
-    public async Task<Response<AdresIOHalCollection>> FindAsync(string postCode, string houseNumber, string houseNumberAddition = "", string houseLetter = "", bool? exactMatch = null)
+    public async Task<Result<AdresIOHalCollection>> FindAsync(string postCode, string houseNumber, string houseNumberAddition = "", string houseLetter = "", bool? exactMatch = null)
     {
-        if (string.IsNullOrEmpty(postCode)) throw new ArgumentNullException(nameof(postCode), $"{nameof(postCode)} is required");
-        if (string.IsNullOrEmpty(houseNumber)) throw new ArgumentNullException(nameof(houseNumber), $"{nameof(houseNumber)} is required");
+        var guard = Guard.New()
+            .NotNull(postCode, $"{nameof(postCode)} is required")
+            .NotNull(houseNumber,$"{nameof(houseNumber)} is required");
+        if (guard.Exception != null) return guard;
 
         var query = new Dictionary<string, string>
         {
@@ -47,12 +53,17 @@ public class AddressService : IAddressService
     /// <see href="https://lvbag.github.io/BAG-API/Technische%20specificatie/#/Adres/bevraagAdressen">Query Addresses</see>
     /// <param name="queryParams">Query params based on Swagger doc</param>
     /// <returns>Response of AdresIOHalCollection</returns>
-    public async Task<Response<AdresIOHalCollection>> FindAsync(Dictionary<string, string> queryParams)
+    public async Task<Result<AdresIOHalCollection>> FindAsync(Dictionary<string, string> queryParams)
     {
+        var guard = Guard.New()
+            .NotNull(queryParams, $"{nameof(queryParams)} is required")
+            .NotEmpty(queryParams, $"{nameof(queryParams)} is required");
+        if (guard.Exception != null) return guard;
+        
         var queryString = "?" + string.Join('&', queryParams.Select(x => $"{x.Key}={x.Value}"));
         var url = $"adressen{queryString}";
 
         var response = await _client.GetAsync(url);
-        return await response.ToResponseAsync<AdresIOHalCollection>();
+        return await response.ToResultAsync<AdresIOHalCollection>();
     }
 }

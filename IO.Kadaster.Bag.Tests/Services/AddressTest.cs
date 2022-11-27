@@ -1,4 +1,3 @@
-using System.Net;
 using IO.Kadaster.Bag.Services;
 using RichardSzalay.MockHttp;
 
@@ -15,57 +14,63 @@ public class AddressTest
     public async Task FindAsync_PostCodeAndHouseNumber_Ok()
     {
         // Arrange
-        var postcode = "1011PN";
-        var huisnummer = "1";
+        var postCode = "1011PN";
+        var houseNumber = "1";
 
         var mockHttp = new MockHttpMessageHandler();
         mockHttp
-            .When($"http://localhost/adressen?postcode={postcode}&huisnummer={huisnummer}")
+            .When($"http://localhost/adressen?postcode={postCode}&huisnummer={houseNumber}")
             .Respond("application/json", _jsonResponseOk);
 
         var client = mockHttp.ToBagHttpClient();
         var address = new AddressService(client);
         // Act
-        var result = await address.FindAsync(postcode, huisnummer);
+        var result = await address.FindAsync(postCode, houseNumber);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Null(result.Error);
-        Assert.Equal(HttpStatusCode.OK, result.Status);
-
-        Assert.NotNull(result.Object);
-        Assert.NotNull(result.Object.Embedded);
-        Assert.NotNull(result.Object.Embedded.Adressen);
-        Assert.Single(result.Object.Embedded.Adressen);
-        Assert.Equal(postcode, result.Object.Embedded.Adressen[0].Postcode);
-        Assert.Equal(huisnummer, result.Object.Embedded.Adressen[0].Huisnummer?.ToString());
-        Assert.Equal("Amstel", result.Object.Embedded.Adressen[0].KorteNaam);
-        Assert.Equal("Amsterdam", result.Object.Embedded.Adressen[0].WoonplaatsNaam);
+        result.On(value =>
+        {
+            Assert.NotNull(value);
+            Assert.NotNull(value.Embedded);
+            Assert.NotNull(value.Embedded.Adressen);
+            Assert.Single(value.Embedded.Adressen);
+            Assert.Equal(postCode, value.Embedded.Adressen[0].Postcode);
+            Assert.Equal(houseNumber, value.Embedded.Adressen[0].Huisnummer?.ToString());
+            Assert.Equal("Amstel", value.Embedded.Adressen[0].KorteNaam);
+            Assert.Equal("Amsterdam", value.Embedded.Adressen[0].WoonplaatsNaam);
+        }, error =>
+        {
+            Assert.Fail("Should not entered here");
+        });
     }
 
     [Fact]
     public async Task FindAsync_PostCodeAndHouseNumber_NotFound()
     {
         // Arrange
-        var postcode = "1011PN";
-        var huisnummer = "2";
+        var postCode = "1011PN";
+        var houseNumber = "2";
 
         var mockHttp = new MockHttpMessageHandler();
         mockHttp
-            .When($"http://localhost/adressen?postcode={postcode}&huisnummer={huisnummer}")
+            .When($"http://localhost/adressen?postcode={postCode}&huisnummer={houseNumber}")
             .Respond("application/json", _jsonResponseNotFound);
 
         var client = mockHttp.ToBagHttpClient();
         var address = new AddressService(client);
         // Act
-        var result = await address.FindAsync(postcode, huisnummer);
+        var result = await address.FindAsync(postCode, houseNumber);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Null(result.Error);
-        Assert.Equal(HttpStatusCode.OK, result.Status);
-
-        Assert.NotNull(result.Object);
-        Assert.Null(result.Object.Embedded);
+        result.On(value =>
+        {
+            Assert.NotNull(value);
+            Assert.Null(value.Embedded);
+        }, error =>
+        {
+            Assert.Fail("Should not entered here");
+        });
     }
 }

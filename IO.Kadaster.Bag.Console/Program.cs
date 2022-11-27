@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using IO.Kadaster.Bag;
+using IO.Kadaster.Bag.Exceptions;
 using IO.Kadaster.Bag.Options;
 using IO.Kadaster.Bag.Services;
 using Microsoft.Extensions.Configuration;
@@ -21,11 +22,28 @@ var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
 
 var addressService = host.Services.GetRequiredService<IAddressService>();
 
-var result = await addressService.FindAsync("1011PN", "1");
-
-Console.WriteLine($"Success: {result.Ok}");
-Console.WriteLine($"Object: {JsonSerializer.Serialize(result.Object)}");
-Console.WriteLine($"Error: {JsonSerializer.Serialize(result.Error)}");
+try
+{
+    var result = await addressService.FindAsync("1011PN", "1");
+    var addresses = result.GetOrThrow();
+    if (addresses.Embedded != null)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(addresses.Embedded.Adressen[0])); 
+    }
+    else
+    {
+        Console.WriteLine("No address found");
+    }
+}
+catch (BagException e)
+{
+    Console.WriteLine($"Error: {JsonSerializer.Serialize(e.Error)}");
+}
+catch (Exception e)
+{
+    Console.WriteLine(e);
+    throw;
+}
 
 lifetime.StopApplication();
 await host.WaitForShutdownAsync();
