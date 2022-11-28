@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hya.Kadaster.Bag", "Hya.Kadaster.Bag\Hya.Kadaster.Bag.csproj", "{BFA5F76A-1F4D-4294-9A69-F665D72F3511}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hya.Kadaster.Bag.Tests", "Hya.Kadaster.Bag.Tests\Hya.Kadaster.Bag.Tests.csproj", "{DB8A1E0F-2304-45D2-80CC-055F059BD298}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hya.Kadaster.Bag.Console", "Hya.Kadaster.Bag.Console\Hya.Kadaster.Bag.Console.csproj", "{5E40BD21-2E62-4670-A53A-73A4636337FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2FD5212D-430D-4E63-8B70-47771DC614BA}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFA5F76A-1F4D-4294-9A69-F665D72F3511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFA5F76A-1F4D-4294-9A69-F665D72F3511}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFA5F76A-1F4D-4294-9A69-F665D72F3511}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFA5F76A-1F4D-4294-9A69-F665D72F3511}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB8A1E0F-2304-45D2-80CC-055F059BD298}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB8A1E0F-2304-45D2-80CC-055F059BD298}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB8A1E0F-2304-45D2-80CC-055F059BD298}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB8A1E0F-2304-45D2-80CC-055F059BD298}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E40BD21-2E62-4670-A53A-73A4636337FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E40BD21-2E62-4670-A53A-73A4636337FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E40BD21-2E62-4670-A53A-73A4636337FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E40BD21-2E62-4670-A53A-73A4636337FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
