@@ -7,4 +7,5 @@ public interface IAddressService
 {
     Task<Result<AdresIOHalCollection>> FindAsync(string postCode, int houseNumber, string houseNumberAddition = "", string houseLetter = "", bool? exactMatch = null);
     Task<Result<AdresIOHalCollection>> FindAsync(Dictionary<string, string> queryParams);
+    Task<Result<AdresIOHal>> GetAsync(string identifier);
 }

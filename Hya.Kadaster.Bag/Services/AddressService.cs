@@ -71,4 +71,24 @@ public class AddressService : IAddressService
         var response = await _client.GetAsync(url);
         return await response.ToResultAsync<AdresIOHalCollection>();
     }
+
+    /// <summary>
+    /// Get address based on the identifier (see Swagger doc)
+    /// </summary>
+    /// <see href="https://lvbag.github.io/BAG-API/Technische%20specificatie/#/Adres/bevraagAdressenMetNumId">Get Address</see>
+    /// <param name="identifier">Identifier for the Address</param>
+    /// <returns>Response of AdresIOHal</returns>
+    public async Task<Result<AdresIOHal>> GetAsync(string identifier)
+    {
+        identifier = identifier?.Trim();
+        
+        var guard = Guard.New()
+            .NotNullOrEmpty(identifier, $"{nameof(identifier)} is required");
+        if (guard.Exception != null) return guard;
+
+        var url = $"adressen/{identifier}";
+
+        var response = await _client.GetAsync(url);
+        return await response.ToResultAsync<AdresIOHal>();
+    }
 }
