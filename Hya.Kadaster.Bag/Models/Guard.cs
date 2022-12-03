@@ -7,6 +7,8 @@ public class Guard
 {
     public Exception? Exception { get; private set; }
 
+    private static readonly Regex DutchPostalCodeRegex = new(@"^\d{4} ?\w{2}$", RegexOptions.Compiled);
+
     private Guard()
     {
     }
@@ -47,6 +49,6 @@ public class Guard
     );
 
     public Guard NotDutchPostalCode(string value) => Wrap(
-        () => !new Regex(@"^\d{4} ?\w{2}$", RegexOptions.Compiled).IsMatch(value) ? new ArgumentException("PostalCode does not have the correct format: 1234AB or 1234 AB") : null
+        () => !DutchPostalCodeRegex.IsMatch(value) ? new ArgumentException("PostalCode does not have the correct format: 1234AB or 1234 AB") : null
     );
 }
