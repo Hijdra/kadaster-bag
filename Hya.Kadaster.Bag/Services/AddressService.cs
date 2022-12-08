@@ -21,6 +21,64 @@ public class AddressService : IAddressService
     /// Find multiple addresses based on postalCode, houseNumber and optional params
     /// </summary>
     /// <see href="https://lvbag.github.io/BAG-API/Technische%20specificatie/#/Adres/bevraagAdressen">Query Addresses</see>
+    /// <param name="search">Search</param>
+    /// <returns>Response of AdresIOHalCollection</returns>
+    public async Task<Result<AdresIOHalCollection>> FindAsync(string search)
+    {
+        search = search?.Trim();
+
+        var guard = Guard.New()
+            .NotNullOrEmpty(search, $"{nameof(search)} is required");
+        if (guard.Exception != null) return guard;
+
+        var query = new Dictionary<string, string>
+        {
+            ["q"] = search
+        };
+
+        return await FindAsync(query);
+    }
+
+    /// <summary>
+    /// Find multiple addresses based on postalCode, houseNumber and optional params
+    /// </summary>
+    /// <see href="https://lvbag.github.io/BAG-API/Technische%20specificatie/#/Adres/bevraagAdressen">Query Addresses</see>
+    /// <param name="city">City</param>
+    /// <param name="street">Street</param>
+    /// <param name="houseNumber">House Number</param>
+    /// <param name="houseNumberAddition">House Number Addition</param>
+    /// <param name="houseLetter">House Letter</param>
+    /// <returns>Response of AdresIOHalCollection</returns>
+    public async Task<Result<AdresIOHalCollection>> FindAsync(string city, string street, int houseNumber, string houseNumberAddition = "", string houseLetter = "")
+    {
+        city = city?.Trim();
+        street = street?.Trim();
+        houseNumberAddition = houseNumberAddition?.Trim();
+        houseLetter = houseLetter?.Trim();
+
+        var guard = Guard.New()
+            .NotNullOrEmpty(city, $"{nameof(city)} is required")
+            .NotNullOrEmpty(street, $"{nameof(street)} is required")
+            .NotRange(houseNumber, 1, 99999, $"{nameof(houseNumber)} is not in range between 1 and 99999");
+        if (guard.Exception != null) return guard;
+
+        var query = new Dictionary<string, string>
+        {
+            ["woonplaatsNaam"] = city,
+            ["openbareRuimteNaam"] = street,
+            ["huisnummer"] = houseNumber.ToString()
+        };
+
+        if (!string.IsNullOrEmpty(houseNumberAddition)) query.Add("huisnummertoevoeging", houseNumberAddition);
+        if (!string.IsNullOrEmpty(houseLetter)) query.Add("huisletter", houseLetter);
+
+        return await FindAsync(query);
+    }
+
+    /// <summary>
+    /// Find multiple addresses based on postalCode, houseNumber and optional params
+    /// </summary>
+    /// <see href="https://lvbag.github.io/BAG-API/Technische%20specificatie/#/Adres/bevraagAdressen">Query Addresses</see>
     /// <param name="postCode">Postal Code</param>
     /// <param name="houseNumber">House Number</param>
     /// <param name="houseNumberAddition">House Number Addition</param>
@@ -70,6 +128,50 @@ public class AddressService : IAddressService
 
         var response = await _client.GetAsync(url);
         return await response.ToResultAsync<AdresIOHalCollection>();
+    }
+
+    /// <summary>
+    /// Find multiple addresses based on postalCode, houseNumber and optional params
+    /// </summary>
+    /// <see href="https://lvbag.github.io/BAG-API/Technische%20specificatie/#/Adres/bevraagAdressen">Query Addresses</see>
+    /// <param name="propertyId">Search</param>
+    /// <returns>Response of AdresIOHalCollection</returns>
+    public async Task<Result<AdresIOHalCollection>> FindByPropertyAsync(string propertyId)
+    {
+        propertyId = propertyId?.Trim();
+
+        var guard = Guard.New()
+            .NotNullOrEmpty(propertyId, $"{nameof(propertyId)} is required");
+        if (guard.Exception != null) return guard;
+
+        var query = new Dictionary<string, string>
+        {
+            ["pandIdentificatie"] = propertyId
+        };
+
+        return await FindAsync(query);
+    }
+
+    /// <summary>
+    /// Find multiple addresses based on postalCode, houseNumber and optional params
+    /// </summary>
+    /// <see href="https://lvbag.github.io/BAG-API/Technische%20specificatie/#/Adres/bevraagAdressen">Query Addresses</see>
+    /// <param name="addressableObjectId">Search</param>
+    /// <returns>Response of AdresIOHalCollection</returns>
+    public async Task<Result<AdresIOHalCollection>> FindByAddressableObjectAsync(string addressableObjectId)
+    {
+        addressableObjectId = addressableObjectId?.Trim();
+
+        var guard = Guard.New()
+            .NotNullOrEmpty(addressableObjectId, $"{nameof(addressableObjectId)} is required");
+        if (guard.Exception != null) return guard;
+
+        var query = new Dictionary<string, string>
+        {
+            ["adresseerbaarObjectIdentificatie"] = addressableObjectId
+        };
+
+        return await FindAsync(query);
     }
 
     /// <summary>
