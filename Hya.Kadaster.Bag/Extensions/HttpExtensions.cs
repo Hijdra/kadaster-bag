@@ -19,8 +19,16 @@ internal static class HttpExtensions
             return new NotSupportedException("Success response is null");
         }
 
-        var error = await responseMessage.Content.ReadFromJsonAsync<Error>();
+        if (responseMessage.Content.Headers.ContentType?.MediaType == "text/html")
+        {
+            var html = await responseMessage.Content.ReadAsStringAsync();
+            if (html.Contains("Missing API Key"))
+                return new ArgumentException("Missing API Key");
 
+            return new NotSupportedException("API returned HTML with unknown contents");
+        }
+
+        var error = await responseMessage.Content.ReadFromJsonAsync<Error>();
         return error == null
             ? new NotSupportedException("Error response is null")
             : new BagException(error);

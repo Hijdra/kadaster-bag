@@ -12,13 +12,14 @@ await BuildCommandLine()
     .UseHost(_ => Host.CreateDefaultBuilder(),
         host =>
         {
-            host.ConfigureAppConfiguration(cfg => { cfg.AddEnvironmentVariables("Hya_"); })
+            host.ConfigureAppConfiguration(cfg => { cfg.AddEnvironmentVariables("Hya_BagOptions"); })
                 .ConfigureLogging(logging => { logging.ClearProviders(); })
                 .ConfigureServices((context, services) =>
                 {
                     var config = context.Configuration;
                     services.AddBagServices(options => config.GetSection(BagOptions.DefaultSection).Bind(options));
                 })
+                .UseCommandHandler<Auth, Auth.Handler>()
                 .UseCommandHandler<AddressFind, AddressFind.Handler>()
                 .UseCommandHandler<AddressGet, AddressGet.Handler>();
         })

@@ -6,6 +6,7 @@ public class Bag : RootCommand
 {
     public Bag() : base("Cli tool for querying data from Kadaster Bag API")
     {
+        AddCommand(new Auth());
         AddCommand(new AddressFind());
         AddCommand(new AddressGet());
     }
