@@ -12,11 +12,7 @@ await BuildCommandLine()
     .UseHost(_ => Host.CreateDefaultBuilder(),
         host =>
         {
-            host.ConfigureAppConfiguration(cfg =>
-                {
-                    cfg.AddJsonFile("appsettings.json");
-                    cfg.AddEnvironmentVariables("Hya_");
-                })
+            host.ConfigureAppConfiguration(cfg => { cfg.AddEnvironmentVariables("Hya_"); })
                 .ConfigureLogging(logging => { logging.ClearProviders(); })
                 .ConfigureServices((context, services) =>
                 {
