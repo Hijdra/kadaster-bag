@@ -13,10 +13,11 @@ public class TableWriter : IOutputWriter
     {
         if (value is IEnumerable<object> list)
         {
-            var columns = value
-                .GetType()
-                .GetTypeInfo()
-                .GenericTypeArguments[0]
+            var type = value.GetType().GetTypeInfo();
+            var baseType = (type.IsArray ? type.GetElementType() : type.GenericTypeArguments[0])
+                           ?? throw new NotSupportedException("Should not happen");
+
+            var columns = baseType
                 .GetProperties()
                 .Where(x => x.CanRead)
                 .Select(x => x.Name)
@@ -45,7 +46,7 @@ public class TableWriter : IOutputWriter
                 .ToArray();
 
             var table = new ConsoleTable(columns);
-            
+
             var itemType = value.GetType();
             var row = columns
                 .Select(x => itemType.GetProperty(x)?.GetValue(value) ?? new object())
