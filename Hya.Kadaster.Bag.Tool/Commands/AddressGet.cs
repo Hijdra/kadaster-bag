@@ -1,25 +1,24 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using System.CommandLine.IO;
-using System.Text.Json;
 using Hya.Kadaster.Bag.Tool.Extensions;
 using Hya.Kadaster.Bag.Tool.Models;
 using Hya.Kadaster.Bag.Services;
+using Hya.Kadaster.Bag.Tool.Writers;
 
 namespace Hya.Kadaster.Bag.Tool.Commands;
 
 public class AddressGet : Command
 {
-    public AddressGet() : base("address-get", "Get single address")
+    public AddressGet() : base("get", "Get single address")
     {
         AddArgument(new Argument<string>("identifier"));
     }
 
-    public new class Handler : ICommandHandler
+    public new class Handler : OutputHandler, ICommandHandler
     {
         private readonly IAddressService _addressService;
 
-        public Handler(IAddressService addressService)
+        public Handler(IAddressService addressService, IEnumerable<IOutputWriter> writers) : base(writers)
         {
             _addressService = addressService;
         }
@@ -44,7 +43,7 @@ public class AddressGet : Command
                         Street = address.OpenbareRuimteNaam
                     };
 
-                    context.Console.Out.WriteLine(JsonSerializer.Serialize(lookup));
+                    Write(context.Console, lookup);
 
                     return 0;
                 });

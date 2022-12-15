@@ -1,18 +1,18 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.IO;
-using System.Text.Json;
 using Hya.Kadaster.Bag.Tool.Extensions;
 using Hya.Kadaster.Bag.Tool.Models;
 using Hya.Kadaster.Bag.Models;
 using Hya.Kadaster.Bag.Models.Generated;
 using Hya.Kadaster.Bag.Services;
+using Hya.Kadaster.Bag.Tool.Writers;
 
 namespace Hya.Kadaster.Bag.Tool.Commands;
 
 public class AddressFind : Command
 {
-    public AddressFind() : base("address-find", "Finds multiple addresses")
+    public AddressFind() : base("find", "Finds multiple addresses")
     {
         AddOption(new Option<string>(new[] { "-p", "--postal-code" }));
         AddOption(new Option<int>(new[] { "-h", "--house-number" }));
@@ -29,11 +29,11 @@ public class AddressFind : Command
         AddOption(new Option<int>(new[] { "--page-size" }));
     }
 
-    public new class Handler : ICommandHandler
+    public new class Handler : OutputHandler, ICommandHandler
     {
         private readonly IAddressService _addressService;
 
-        public Handler(IAddressService addressService)
+        public Handler(IAddressService addressService, IEnumerable<IOutputWriter> writers) : base(writers)
         {
             _addressService = addressService;
         }
@@ -73,9 +73,10 @@ public class AddressFind : Command
                                 HouseNumber = x.Huisnummer ?? 0,
                                 City = x.WoonplaatsNaam,
                                 Street = x.OpenbareRuimteNaam
-                            });
+                            })
+                            .ToList();
 
-                        context.Console.Out.WriteLine(JsonSerializer.Serialize(lookups));
+                        Write(context.Console, lookups);
 
                         return 0;
                     }

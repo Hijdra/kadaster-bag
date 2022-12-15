@@ -4,6 +4,8 @@ using System.CommandLine.Parsing;
 using Hya.Kadaster.Bag;
 using Hya.Kadaster.Bag.Tool;
 using Hya.Kadaster.Bag.Tool.Commands;
+using Hya.Kadaster.Bag.Tool.Writers;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -21,6 +23,9 @@ await BuildCommandLine()
                         bool.TryParse(Environment.GetEnvironmentVariable(EnvConfig.IsLive, EnvironmentVariableTarget.User), out var isLive);
                         options.IsLive = isLive;
                     });
+
+                    services.AddTransient<IOutputWriter, JsonWriter>();
+                    services.AddTransient<IOutputWriter, TableWriter>();
                 })
                 .UseCommandHandler<Auth, Auth.Handler>()
                 .UseCommandHandler<AddressFind, AddressFind.Handler>()
