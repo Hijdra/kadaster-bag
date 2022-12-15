@@ -1,6 +1,6 @@
 using System.CommandLine;
 
-namespace Hya.Kadaster.Bag.Console.Commands;
+namespace Hya.Kadaster.Bag.Tool.Commands;
 
 public class Bag : RootCommand
 {

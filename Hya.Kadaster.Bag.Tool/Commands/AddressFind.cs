@@ -2,13 +2,13 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.IO;
 using System.Text.Json;
-using Hya.Kadaster.Bag.Console.Extensions;
-using Hya.Kadaster.Bag.Console.Models;
+using Hya.Kadaster.Bag.Tool.Extensions;
+using Hya.Kadaster.Bag.Tool.Models;
 using Hya.Kadaster.Bag.Models;
 using Hya.Kadaster.Bag.Models.Generated;
 using Hya.Kadaster.Bag.Services;
 
-namespace Hya.Kadaster.Bag.Console.Commands;
+namespace Hya.Kadaster.Bag.Tool.Commands;
 
 public class AddressFind : Command
 {

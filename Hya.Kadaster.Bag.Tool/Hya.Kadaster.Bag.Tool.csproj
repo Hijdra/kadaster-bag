@@ -5,7 +5,15 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>Kadaster.Bag.Console</RootNamespace>
+        <RootNamespace>Hya.Kadaster.Bag.Tool</RootNamespace>
+        <PackageVersion>0.1.0</PackageVersion>
+        <Title>Kadaster Bag cli</Title>
+        <PackageProjectUrl>https://github.com/Hijdra/kadaster-bag</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/Hijdra/kadaster-bag/blob/main/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/Hijdra/kadaster-bag</RepositoryUrl>
+        <PackageTags>Kadaster,Bag</PackageTags>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>bag</ToolCommandName>
     </PropertyGroup>
 
     <ItemGroup>

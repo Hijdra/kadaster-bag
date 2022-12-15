@@ -4,7 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>Kadaster.Bag</RootNamespace>
+        <RootNamespace>Hya.Kadaster.Bag</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>Kadaster Bag client</Title>
         <Authors>Mark Hijdra</Authors>

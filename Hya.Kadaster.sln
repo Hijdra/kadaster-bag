@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hya.Kadaster.Bag", "Hya.Kad
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hya.Kadaster.Bag.Tests", "Hya.Kadaster.Bag.Tests\Hya.Kadaster.Bag.Tests.csproj", "{DB8A1E0F-2304-45D2-80CC-055F059BD298}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hya.Kadaster.Bag.Console", "Hya.Kadaster.Bag.Console\Hya.Kadaster.Bag.Console.csproj", "{5E40BD21-2E62-4670-A53A-73A4636337FE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hya.Kadaster.Bag.Tool", "Hya.Kadaster.Bag.Tool\Hya.Kadaster.Bag.Tool.csproj", "{5E40BD21-2E62-4670-A53A-73A4636337FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2FD5212D-430D-4E63-8B70-47771DC614BA}"
 	ProjectSection(SolutionItems) = preProject

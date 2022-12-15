@@ -2,7 +2,7 @@
 using System.CommandLine.Hosting;
 using System.CommandLine.Parsing;
 using Hya.Kadaster.Bag;
-using Hya.Kadaster.Bag.Console.Commands;
+using Hya.Kadaster.Bag.Tool.Commands;
 using Hya.Kadaster.Bag.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;

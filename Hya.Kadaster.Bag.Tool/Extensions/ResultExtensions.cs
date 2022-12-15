@@ -3,7 +3,7 @@ using System.CommandLine.IO;
 using Hya.Kadaster.Bag.Exceptions;
 using Hya.Kadaster.Bag.Models;
 
-namespace Hya.Kadaster.Bag.Console.Extensions;
+namespace Hya.Kadaster.Bag.Tool.Extensions;
 
 public static class ResultExtensions
 {

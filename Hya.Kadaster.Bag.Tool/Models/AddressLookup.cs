@@ -1,4 +1,4 @@
-namespace Hya.Kadaster.Bag.Console.Models;
+namespace Hya.Kadaster.Bag.Tool.Models;
 
 public class AddressLookup
 {
