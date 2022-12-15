@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>Hya.Kadaster.Bag.Tool</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageVersion>0.1.0</PackageVersion>
         <Title>Kadaster Bag cli</Title>
         <PackageProjectUrl>https://github.com/Hijdra/kadaster-bag</PackageProjectUrl>
