@@ -2,9 +2,8 @@
 using System.CommandLine.Hosting;
 using System.CommandLine.Parsing;
 using Hya.Kadaster.Bag;
+using Hya.Kadaster.Bag.Tool;
 using Hya.Kadaster.Bag.Tool.Commands;
-using Hya.Kadaster.Bag.Options;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -12,12 +11,16 @@ await BuildCommandLine()
     .UseHost(_ => Host.CreateDefaultBuilder(),
         host =>
         {
-            host.ConfigureAppConfiguration(cfg => { cfg.AddEnvironmentVariables("Hya_BagOptions"); })
-                .ConfigureLogging(logging => { logging.ClearProviders(); })
+            host.ConfigureLogging(logging => { logging.ClearProviders(); })
                 .ConfigureServices((context, services) =>
                 {
                     var config = context.Configuration;
-                    services.AddBagServices(options => config.GetSection(BagOptions.DefaultSection).Bind(options));
+                    services.AddBagServices(options =>
+                    {
+                        options.ApiKey = Environment.GetEnvironmentVariable(EnvConfig.ApiKey, EnvironmentVariableTarget.User) ?? "";
+                        bool.TryParse(Environment.GetEnvironmentVariable(EnvConfig.IsLive, EnvironmentVariableTarget.User), out var isLive);
+                        options.IsLive = isLive;
+                    });
                 })
                 .UseCommandHandler<Auth, Auth.Handler>()
                 .UseCommandHandler<AddressFind, AddressFind.Handler>()

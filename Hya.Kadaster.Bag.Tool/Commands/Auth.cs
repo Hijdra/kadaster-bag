@@ -30,8 +30,8 @@ public class Auth : Command
                 return 1;
             }
 
-            Environment.SetEnvironmentVariable("Hya_BagOptions__ApiKey", ApiKey, EnvironmentVariableTarget.User);
-            Environment.SetEnvironmentVariable("Hya_BagOptions__IsLive", Live.ToString()?.ToLowerInvariant(), EnvironmentVariableTarget.User);
+            Environment.SetEnvironmentVariable(EnvConfig.ApiKey, ApiKey, EnvironmentVariableTarget.User);
+            Environment.SetEnvironmentVariable(EnvConfig.IsLive, Live.ToString()?.ToLowerInvariant(), EnvironmentVariableTarget.User);
 
             return 0;
         }
