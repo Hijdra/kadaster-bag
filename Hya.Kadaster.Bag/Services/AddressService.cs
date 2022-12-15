@@ -18,17 +18,21 @@ public class AddressService : IAddressService
     }
 
     /// <summary>
-    /// Find multiple addresses based on postalCode, houseNumber and optional params
+    /// Find multiple addresses based on search query
     /// </summary>
     /// <see href="https://lvbag.github.io/BAG-API/Technische%20specificatie/#/Adres/bevraagAdressen">Query Addresses</see>
     /// <param name="search">Search</param>
+    /// <param name="page">Page</param>
+    /// <param name="pageSize">Page Size</param>
     /// <returns>Response of AdresIOHalCollection</returns>
-    public async Task<Result<AdresIOHalCollection>> FindAsync(string search)
+    public async Task<Result<AdresIOHalCollection>> FindAsync(string search, int? page = 1, int? pageSize = 20)
     {
         search = search?.Trim();
 
         var guard = Guard.New()
-            .NotNullOrEmpty(search, $"{nameof(search)} is required");
+            .NotNullOrEmpty(search, $"'{nameof(search)}' is required")
+            .On(() => page is < 1, new ArgumentOutOfRangeException($"'{nameof(page)}' can not be lower than 1"))
+            .On(() => pageSize is < 10, new ArgumentOutOfRangeException($"'{nameof(pageSize)}' can not be lower than 10"));
         if (guard.Exception != null) return guard;
 
         var query = new Dictionary<string, string>
@@ -36,11 +40,14 @@ public class AddressService : IAddressService
             ["q"] = search
         };
 
+        if (page != null) query.Add("page", page.Value.ToString());
+        if (pageSize != null) query.Add("pageSize", pageSize.Value.ToString());
+
         return await FindAsync(query);
     }
 
     /// <summary>
-    /// Find multiple addresses based on postalCode, houseNumber and optional params
+    /// Find multiple addresses based on city, street, houseNumber and optional params
     /// </summary>
     /// <see href="https://lvbag.github.io/BAG-API/Technische%20specificatie/#/Adres/bevraagAdressen">Query Addresses</see>
     /// <param name="city">City</param>
@@ -57,9 +64,9 @@ public class AddressService : IAddressService
         houseLetter = houseLetter?.Trim();
 
         var guard = Guard.New()
-            .NotNullOrEmpty(city, $"{nameof(city)} is required")
-            .NotNullOrEmpty(street, $"{nameof(street)} is required")
-            .NotRange(houseNumber, 1, 99999, $"{nameof(houseNumber)} is not in range between 1 and 99999");
+            .NotNullOrEmpty(city, $"'{nameof(city)}' is required")
+            .NotNullOrEmpty(street, $"'{nameof(street)}' is required")
+            .NotRange(houseNumber, 1, 99999, $"'{nameof(houseNumber)}' is not in range between 1 and 99999");
         if (guard.Exception != null) return guard;
 
         var query = new Dictionary<string, string>
@@ -92,9 +99,9 @@ public class AddressService : IAddressService
         houseLetter = houseLetter?.Trim();
 
         var guard = Guard.New()
-            .NotNullOrEmpty(postCode, $"{nameof(postCode)} is required")
+            .NotNullOrEmpty(postCode, $"'{nameof(postCode)}' is required")
             .NotDutchPostalCode(postCode)
-            .NotRange(houseNumber, 1, 99999, $"{nameof(houseNumber)} is not in range between 1 and 99999");
+            .NotRange(houseNumber, 1, 99999, $"'{nameof(houseNumber)}' is not in range between 1 and 99999");
         if (guard.Exception != null) return guard;
 
         var query = new Dictionary<string, string>
@@ -119,8 +126,8 @@ public class AddressService : IAddressService
     public async Task<Result<AdresIOHalCollection>> FindAsync(Dictionary<string, string> queryParams)
     {
         var guard = Guard.New()
-            .NotNull(queryParams, $"{nameof(queryParams)} is required")
-            .NotAny(queryParams, $"{nameof(queryParams)} is required");
+            .NotNull(queryParams, $"'{nameof(queryParams)}' is required")
+            .NotAny(queryParams, $"'{nameof(queryParams)}' is required");
         if (guard.Exception != null) return guard;
 
         var queryString = "?" + string.Join('&', queryParams.Select(x => $"{x.Key}={x.Value}"));
@@ -131,7 +138,7 @@ public class AddressService : IAddressService
     }
 
     /// <summary>
-    /// Find multiple addresses based on postalCode, houseNumber and optional params
+    /// Find multiple addresses based on property Identifier
     /// </summary>
     /// <see href="https://lvbag.github.io/BAG-API/Technische%20specificatie/#/Adres/bevraagAdressen">Query Addresses</see>
     /// <param name="propertyId">Search</param>
@@ -141,7 +148,7 @@ public class AddressService : IAddressService
         propertyId = propertyId?.Trim();
 
         var guard = Guard.New()
-            .NotNullOrEmpty(propertyId, $"{nameof(propertyId)} is required");
+            .NotNullOrEmpty(propertyId, $"'{nameof(propertyId)}' is required");
         if (guard.Exception != null) return guard;
 
         var query = new Dictionary<string, string>
@@ -153,7 +160,7 @@ public class AddressService : IAddressService
     }
 
     /// <summary>
-    /// Find multiple addresses based on postalCode, houseNumber and optional params
+    /// Find multiple addresses based on addressable Object Identifier
     /// </summary>
     /// <see href="https://lvbag.github.io/BAG-API/Technische%20specificatie/#/Adres/bevraagAdressen">Query Addresses</see>
     /// <param name="addressableObjectId">Search</param>
@@ -163,7 +170,7 @@ public class AddressService : IAddressService
         addressableObjectId = addressableObjectId?.Trim();
 
         var guard = Guard.New()
-            .NotNullOrEmpty(addressableObjectId, $"{nameof(addressableObjectId)} is required");
+            .NotNullOrEmpty(addressableObjectId, $"'{nameof(addressableObjectId)}' is required");
         if (guard.Exception != null) return guard;
 
         var query = new Dictionary<string, string>
@@ -183,9 +190,9 @@ public class AddressService : IAddressService
     public async Task<Result<AdresIOHal>> GetAsync(string identifier)
     {
         identifier = identifier?.Trim();
-        
+
         var guard = Guard.New()
-            .NotNullOrEmpty(identifier, $"{nameof(identifier)} is required");
+            .NotNullOrEmpty(identifier, $"'{nameof(identifier)}' is required");
         if (guard.Exception != null) return guard;
 
         var url = $"adressen/{identifier}";

@@ -2,8 +2,8 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.IO;
 using System.Text.Json;
+using Hya.Kadaster.Bag.Console.Extensions;
 using Hya.Kadaster.Bag.Console.Models;
-using Hya.Kadaster.Bag.Exceptions;
 using Hya.Kadaster.Bag.Services;
 
 namespace Hya.Kadaster.Bag.Console.Commands;
@@ -31,33 +31,23 @@ public class AddressGet : Command
         public async Task<int> InvokeAsync(InvocationContext context)
         {
             var get = await _addressService.GetAsync(Identifier);
-            return get.On(address =>
-            {
-                var lookup = new AddressLookup
+            return get.HandleErrorState(
+                context.Console,
+                address =>
                 {
-                    Id = address.NummeraanduidingIdentificatie,
-                    PostalCode = address.Postcode,
-                    HouseNumber = address.Huisnummer ?? 0,
-                    City = address.WoonplaatsNaam,
-                    Street = address.OpenbareRuimteNaam
-                };
+                    var lookup = new AddressLookup
+                    {
+                        Id = address.NummeraanduidingIdentificatie,
+                        PostalCode = address.Postcode,
+                        HouseNumber = address.Huisnummer ?? 0,
+                        City = address.WoonplaatsNaam,
+                        Street = address.OpenbareRuimteNaam
+                    };
 
-                context.Console.Out.WriteLine(JsonSerializer.Serialize(lookup));
+                    context.Console.Out.WriteLine(JsonSerializer.Serialize(lookup));
 
-                return 0;
-            }, error =>
-            {
-                if (error is BagException bagEx)
-                {
-                    context.Console.Error.WriteLine($"Error: {bagEx.Error.Title}");
-                }
-                else
-                {
-                    context.Console.Error.WriteLine($"Error: {error.Message}");
-                }
-
-                return 1;
-            });
+                    return 0;
+                });
         }
     }
 }

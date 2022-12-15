@@ -41,7 +41,7 @@ public class Guard
     );
 
     public Guard NotRange<T>(T value, T min, T max, string message) where T : IComparable<T> => Wrap(
-        () => value.CompareTo(min) < 0 || value.CompareTo(max) > 0 ? new ArgumentException(message) : null
+        () => value.CompareTo(min) < 0 || value.CompareTo(max) > 0 ? new ArgumentOutOfRangeException(message) : null
     );
 
     public Guard On(Func<bool> func, Exception exception) => Wrap(

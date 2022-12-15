@@ -12,7 +12,7 @@
         <PackageLicenseUrl>https://github.com/Hijdra/kadaster-bag/blob/main/LICENSE</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/Hijdra/kadaster-bag</RepositoryUrl>
         <PackageTags>Kadaster,Bag</PackageTags>
-        <PackageVersion>0.4.1</PackageVersion>
+        <PackageVersion>0.4.2</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>

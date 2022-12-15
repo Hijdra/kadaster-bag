@@ -2,8 +2,8 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.IO;
 using System.Text.Json;
+using Hya.Kadaster.Bag.Console.Extensions;
 using Hya.Kadaster.Bag.Console.Models;
-using Hya.Kadaster.Bag.Exceptions;
 using Hya.Kadaster.Bag.Models;
 using Hya.Kadaster.Bag.Models.Generated;
 using Hya.Kadaster.Bag.Services;
@@ -24,6 +24,9 @@ public class AddressFind : Command
         AddOption(new Option<bool>(new[] { "-e", "--exact-match" }));
         AddOption(new Option<string>(new[] { "--property-id" }));
         AddOption(new Option<string>(new[] { "--addressable-object-id" }));
+
+        AddOption(new Option<int>(new[] { "--page" }));
+        AddOption(new Option<int>(new[] { "--page-size" }));
     }
 
     public new class Handler : ICommandHandler
@@ -48,45 +51,39 @@ public class AddressFind : Command
         public string Query { get; set; } // From DI
         public bool? ExactMatch { get; set; } // From DI
 
+        public int? Page { get; set; } // From DI
+        public int? PageSize { get; set; } // From DI
+
         public int Invoke(InvocationContext context) => InvokeAsync(context).GetAwaiter().GetResult();
 
         public async Task<int> InvokeAsync(InvocationContext context)
         {
             var find = await Find();
-            return find.On(addresses =>
-            {
-                if (addresses.Embedded != null)
+            return find.HandleErrorState(
+                context.Console,
+                addresses =>
                 {
-                    var lookup = new AddressLookup
+                    if (addresses.Embedded is { Adressen.Count: > 0 })
                     {
-                        Id = addresses.Embedded.Adressen[0].NummeraanduidingIdentificatie,
-                        PostalCode = addresses.Embedded.Adressen[0].Postcode,
-                        HouseNumber = addresses.Embedded.Adressen[0].Huisnummer ?? 0,
-                        City = addresses.Embedded.Adressen[0].WoonplaatsNaam,
-                        Street = addresses.Embedded.Adressen[0].OpenbareRuimteNaam
-                    };
+                        var lookups = addresses.Embedded.Adressen
+                            .Select(x => new AddressLookup
+                            {
+                                Id = x.NummeraanduidingIdentificatie,
+                                PostalCode = x.Postcode,
+                                HouseNumber = x.Huisnummer ?? 0,
+                                City = x.WoonplaatsNaam,
+                                Street = x.OpenbareRuimteNaam
+                            });
 
-                    context.Console.Out.WriteLine(JsonSerializer.Serialize(lookup));
+                        context.Console.Out.WriteLine(JsonSerializer.Serialize(lookups));
 
-                    return 0;
-                }
+                        return 0;
+                    }
 
-                context.Console.Error.WriteLine("No address found");
+                    context.Console.Error.WriteLine("No address found");
 
-                return 1;
-            }, error =>
-            {
-                if (error is BagException bagEx)
-                {
-                    context.Console.Error.WriteLine($"Error: {bagEx.Error.Title}");
-                }
-                else
-                {
-                    context.Console.Error.WriteLine($"Error: {error.Message}");
-                }
-
-                return 1;
-            });
+                    return 1;
+                });
         }
 
         private Task<Result<AdresIOHalCollection>> Find()
@@ -98,7 +95,7 @@ public class AddressFind : Command
                 return _addressService.FindByAddressableObjectAsync(AddressableObjectId);
 
             if (!string.IsNullOrEmpty(Query))
-                return _addressService.FindAsync(Query);
+                return _addressService.FindAsync(Query, Page, PageSize);
 
             if (!string.IsNullOrEmpty(PostalCode) && HouseNumber != null)
                 return _addressService.FindAsync(PostalCode, HouseNumber.Value, HouseNumberAddition, HouseNumberLetter, ExactMatch);
@@ -120,6 +117,9 @@ public class AddressFind : Command
             if (!string.IsNullOrEmpty(Query)) query.Add("q", Query);
 
             if (ExactMatch != null) query.Add("exacteMatch", ExactMatch.Value.ToString().ToLowerInvariant());
+
+            if (Page != null) query.Add("page", Page.Value.ToString());
+            if (PageSize != null) query.Add("pageSize", PageSize.Value.ToString());
 
             return _addressService.FindAsync(query);
         }
