@@ -49,7 +49,7 @@ public class TableWriter : IOutputWriter
 
             var itemType = value.GetType();
             var row = columns
-                .Select(x => itemType.GetProperty(x)?.GetValue(value) ?? new object())
+                .Select(x => itemType.GetProperty(x)?.GetValue(value))
                 .ToArray();
             table.AddRow(row);
 
