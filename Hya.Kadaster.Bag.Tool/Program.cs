@@ -1,22 +1,21 @@
-﻿using System.CommandLine.Builder;
-using System.CommandLine.Hosting;
-using System.CommandLine.Parsing;
-using Hya.Kadaster.Bag;
+﻿using Hya.Kadaster.Bag;
 using Hya.Kadaster.Bag.Tool;
 using Hya.Kadaster.Bag.Tool.Commands;
 using Hya.Kadaster.Bag.Tool.Writers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.CommandLine.Builder;
+using System.CommandLine.Hosting;
+using System.CommandLine.Parsing;
 
 await BuildCommandLine()
     .UseHost(_ => Host.CreateDefaultBuilder(),
         host =>
         {
             host.ConfigureLogging(logging => { logging.ClearProviders(); })
-                .ConfigureServices((context, services) =>
+                .ConfigureServices(services =>
                 {
-                    var config = context.Configuration;
                     services.AddBagServices(options =>
                     {
                         options.ApiKey = Environment.GetEnvironmentVariable(EnvConfig.ApiKey, EnvironmentVariableTarget.User) ?? "";
@@ -26,6 +25,8 @@ await BuildCommandLine()
 
                     services.AddTransient<IOutputWriter, JsonWriter>();
                     services.AddTransient<IOutputWriter, TableWriter>();
+
+                    services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
                 })
                 .UseCommandHandler<Auth, Auth.Handler>()
                 .UseCommandHandler<AddressFind, AddressFind.Handler>()

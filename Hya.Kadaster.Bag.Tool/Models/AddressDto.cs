@@ -1,6 +1,6 @@
 namespace Hya.Kadaster.Bag.Tool.Models;
 
-public class AddressLookup
+public class AddressDto
 {
     public string Id { get; set; }
     public string City { get; set; }

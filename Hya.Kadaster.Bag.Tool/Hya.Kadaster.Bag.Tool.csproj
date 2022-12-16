@@ -7,7 +7,7 @@
         <Nullable>enable</Nullable>
         <RootNamespace>Hya.Kadaster.Bag.Tool</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>0.3.1</PackageVersion>
+        <PackageVersion>0.3.2</PackageVersion>
         <Title>Kadaster Bag cli</Title>
         <PackageProjectUrl>https://github.com/Hijdra/kadaster-bag</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/Hijdra/kadaster-bag/blob/main/LICENSE</PackageLicenseUrl>
@@ -18,6 +18,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="12.0.0" />
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
       <PackageReference Include="ConsoleTables" Version="2.4.2" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
       <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />

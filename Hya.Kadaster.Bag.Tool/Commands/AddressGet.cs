@@ -1,9 +1,10 @@
-using System.CommandLine;
-using System.CommandLine.Invocation;
+using AutoMapper;
 using Hya.Kadaster.Bag.Tool.Extensions;
 using Hya.Kadaster.Bag.Tool.Models;
 using Hya.Kadaster.Bag.Services;
 using Hya.Kadaster.Bag.Tool.Writers;
+using System.CommandLine;
+using System.CommandLine.Invocation;
 
 namespace Hya.Kadaster.Bag.Tool.Commands;
 
@@ -16,11 +17,13 @@ public class AddressGet : Command
 
     public new class Handler : OutputHandler, ICommandHandler
     {
+        private readonly IMapper _mapper;
         private readonly IAddressService _addressService;
 
-        public Handler(IAddressService addressService, IEnumerable<IOutputWriter> writers) : base(writers)
+        public Handler(IAddressService addressService, IEnumerable<IOutputWriter> writers, IMapper mapper) : base(writers)
         {
             _addressService = addressService;
+            _mapper = mapper;
         }
 
         public string Identifier { get; set; } // From DI
@@ -34,16 +37,7 @@ public class AddressGet : Command
                 context.Console,
                 address =>
                 {
-                    var lookup = new AddressLookup
-                    {
-                        Id = address.NummeraanduidingIdentificatie,
-                        PostalCode = address.Postcode,
-                        HouseNumber = address.Huisnummer ?? 0,
-                        HouseNumberAddition = address.Huisnummertoevoeging,
-                        HouseLetter = address.Huisletter,
-                        City = address.WoonplaatsNaam,
-                        Street = address.OpenbareRuimteNaam
-                    };
+                    var lookup = _mapper.Map<AddressDto>(address);
 
                     Write(context.Console, lookup);
 

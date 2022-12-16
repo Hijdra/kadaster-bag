@@ -1,12 +1,13 @@
-using System.CommandLine;
-using System.CommandLine.Invocation;
-using System.CommandLine.IO;
+using AutoMapper;
 using Hya.Kadaster.Bag.Tool.Extensions;
-using Hya.Kadaster.Bag.Tool.Models;
 using Hya.Kadaster.Bag.Models;
 using Hya.Kadaster.Bag.Models.Generated;
 using Hya.Kadaster.Bag.Services;
+using Hya.Kadaster.Bag.Tool.Models;
 using Hya.Kadaster.Bag.Tool.Writers;
+using System.CommandLine;
+using System.CommandLine.Invocation;
+using System.CommandLine.IO;
 
 namespace Hya.Kadaster.Bag.Tool.Commands;
 
@@ -31,11 +32,13 @@ public class AddressFind : Command
 
     public new class Handler : OutputHandler, ICommandHandler
     {
+        private readonly IMapper _mapper;
         private readonly IAddressService _addressService;
 
-        public Handler(IAddressService addressService, IEnumerable<IOutputWriter> writers) : base(writers)
+        public Handler(IAddressService addressService, IEnumerable<IOutputWriter> writers, IMapper mapper) : base(writers)
         {
             _addressService = addressService;
+            _mapper = mapper;
         }
 
         public string PropertyId { get; set; } // From DI
@@ -66,16 +69,7 @@ public class AddressFind : Command
                     if (addresses.Embedded is { Adressen.Count: > 0 })
                     {
                         var lookups = addresses.Embedded.Adressen
-                            .Select(x => new AddressLookup
-                            {
-                                Id = x.NummeraanduidingIdentificatie,
-                                PostalCode = x.Postcode,
-                                HouseNumber = x.Huisnummer ?? 0,
-                                HouseNumberAddition = x.Huisnummertoevoeging,
-                                HouseLetter = x.Huisletter,
-                                City = x.WoonplaatsNaam,
-                                Street = x.OpenbareRuimteNaam
-                            })
+                            .Select(address=> _mapper.Map<AddressDto>(address))
                             .ToList();
 
                         Write(context.Console, lookups);

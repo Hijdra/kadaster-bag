@@ -1,7 +1,7 @@
+using ConsoleTables;
 using System.CommandLine;
 using System.CommandLine.IO;
 using System.Reflection;
-using ConsoleTables;
 
 namespace Hya.Kadaster.Bag.Tool.Writers;
 
