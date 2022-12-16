@@ -39,6 +39,8 @@ public class AddressGet : Command
                         Id = address.NummeraanduidingIdentificatie,
                         PostalCode = address.Postcode,
                         HouseNumber = address.Huisnummer ?? 0,
+                        HouseNumberAddition = address.Huisnummertoevoeging,
+                        HouseLetter = address.Huisletter,
                         City = address.WoonplaatsNaam,
                         Street = address.OpenbareRuimteNaam
                     };

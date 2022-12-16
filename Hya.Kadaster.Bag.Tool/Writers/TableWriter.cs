@@ -28,7 +28,7 @@ public class TableWriter : IOutputWriter
             {
                 var itemType = item.GetType();
                 var row = columns
-                    .Select(x => itemType.GetProperty(x)?.GetValue(item) ?? new object())
+                    .Select(x => itemType.GetProperty(x)?.GetValue(item))
                     .ToArray();
                 table.AddRow(row);
             }

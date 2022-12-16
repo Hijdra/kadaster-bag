@@ -71,6 +71,8 @@ public class AddressFind : Command
                                 Id = x.NummeraanduidingIdentificatie,
                                 PostalCode = x.Postcode,
                                 HouseNumber = x.Huisnummer ?? 0,
+                                HouseNumberAddition = x.Huisnummertoevoeging,
+                                HouseLetter = x.Huisletter,
                                 City = x.WoonplaatsNaam,
                                 Street = x.OpenbareRuimteNaam
                             })
