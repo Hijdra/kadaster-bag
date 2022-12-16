@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Authentication;
 using System.Text.Json;
 using Hya.Kadaster.Bag.Exceptions;
 using Hya.Kadaster.Bag.Models;
@@ -22,8 +23,10 @@ internal static class HttpExtensions
         if (responseMessage.Content.Headers.ContentType?.MediaType == "text/html")
         {
             var html = await responseMessage.Content.ReadAsStringAsync();
+            if (html.Contains("Invalid API Key"))
+                return new AuthenticationException("Invalid API Key");
             if (html.Contains("Missing API Key"))
-                return new ArgumentException("Missing API Key");
+                return new AuthenticationException("Missing API Key");
 
             return new NotSupportedException("API returned HTML with unknown contents");
         }
