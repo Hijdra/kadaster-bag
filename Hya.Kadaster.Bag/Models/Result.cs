@@ -35,7 +35,7 @@ public class Result<T>
 
     public T GetOrThrow()
     {
-        if (_ok) throw _exception;
+        if (!_ok) throw _exception;
         return _value;
     }
 
